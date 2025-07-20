@@ -9,12 +9,14 @@ import {
 } from '@mui/material';
 import {
   Menu as MenuIcon,
+  Add,
   Settings,
   Analytics,
 } from '@mui/icons-material';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../store';
 import { toggleRightSidebar } from '../store/settingsSlice';
+import { createChat } from '../store/chatSlice';
 import { ChatWindow } from '../components/ChatWindow';
 import { Sidebar } from '../components/Sidebar';
 import { SettingsDrawer } from '../components/SettingsDrawer';
@@ -26,7 +28,7 @@ export const Home: React.FC = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
   
-  const { rightSidebarOpen } = useSelector((state: RootState) => state.settings);
+  const { rightSidebarOpen, model } = useSelector((state: RootState) => state.settings);
   const { activeChat, chats } = useSelector((state: RootState) => state.chat);
   
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(false);
@@ -81,7 +83,7 @@ export const Home: React.FC = () => {
         {/* App Bar */}
         <AppBar
           position="fixed"
-          sx={{
+          sx={(theme) => ({
             ml: { sm: `${DRAWER_WIDTH}px` },
             mr: rightSidebarOpen ? '400px' : 0,
             width: {
@@ -89,11 +91,12 @@ export const Home: React.FC = () => {
                 ? `calc(100% - ${DRAWER_WIDTH}px - 400px)`
                 : `calc(100% - ${DRAWER_WIDTH}px)`,
             },
+            background: `linear-gradient(90deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
             transition: theme.transitions.create(['width', 'margin'], {
               easing: theme.transitions.easing.sharp,
               duration: theme.transitions.duration.leavingScreen,
             }),
-          }}
+          })}
         >
           <Toolbar>
             <IconButton
@@ -104,6 +107,15 @@ export const Home: React.FC = () => {
               sx={{ mr: 2, display: { sm: 'none' } }}
             >
               <MenuIcon />
+            </IconButton>
+
+            <IconButton
+              color="inherit"
+              aria-label="new chat"
+              onClick={() => dispatch(createChat({ model }))}
+              sx={{ mr: 1 }}
+            >
+              <Add />
             </IconButton>
             
             <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
