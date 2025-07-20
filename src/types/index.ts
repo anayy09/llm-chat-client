@@ -20,6 +20,9 @@ export interface Chat {
 
 export interface ChatSettings {
   model: string;
+  imageModel: string;
+  audioModel: string;
+  embeddingModel: string;
   temperature: number;
   maxTokens: number;
   enableCache: boolean;

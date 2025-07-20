@@ -28,3 +28,7 @@ export const AUDIO_MODELS = [
 ] as const;
 
 export type ModelType = typeof AVAILABLE_MODELS[number];
+export type AudioModelType = typeof AUDIO_MODELS[number];
+export type ImageModelType = typeof IMAGE_MODELS[number];
+export type EmbeddingModelType = typeof EMBEDDING_MODELS[number];
+

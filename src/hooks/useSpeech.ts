@@ -9,7 +9,7 @@ export const useSpeech = () => {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   
-  const { apiKey } = useSelector((state: RootState) => state.settings);
+  const { apiKey, audioModel } = useSelector((state: RootState) => state.settings);
 
   const startRecording = useCallback(async () => {
     try {
@@ -45,7 +45,7 @@ export const useSpeech = () => {
           const audioBlob = new Blob(chunksRef.current, { type: 'audio/webm' });
           
           const client = createLiteLLMClient(apiKey);
-          const transcription = await client.transcribeAudio(audioBlob);
+          const transcription = await client.transcribeAudio(audioBlob, audioModel);
           
           resolve(transcription);
         } catch (error) {
@@ -63,7 +63,7 @@ export const useSpeech = () => {
 
       mediaRecorderRef.current.stop();
     });
-  }, [apiKey]);
+  }, [apiKey, audioModel]);
 
   return {
     isRecording,
