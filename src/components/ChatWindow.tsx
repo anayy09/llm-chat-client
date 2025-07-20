@@ -329,10 +329,11 @@ export const ChatWindow: React.FC = () => {
             placeholder="Send a message…"
             disabled={isLoading}
             variant="filled"
-            size="medium"
+            // size="medium"
             InputProps={{ disableUnderline: true }}
             sx={(theme) => ({
               '& .MuiFilledInput-root': {
+                padding: '8px 12px',
                 background:
                   theme.palette.mode === 'light'
                     ? 'linear-gradient(90deg, #fff 0%, #f3f4f6 100%)'
