@@ -79,7 +79,11 @@ export class LiteLLMClient {
     }
 
     const result = await response.json();
-    return result.data?.[0]?.url ?? '';
+    const item = result.data?.[0] ?? {};
+    if (item.url) return item.url;
+    if (item.URL) return item.URL;
+    if (item.b64_json) return `data:image/png;base64,${item.b64_json}`;
+    return '';
   }
 
   async createEmbedding(input: string, model: string): Promise<number[]> {
