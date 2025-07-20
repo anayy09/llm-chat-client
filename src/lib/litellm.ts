@@ -43,10 +43,10 @@ export class LiteLLMClient {
     }
   }
 
-  async transcribeAudio(audioBlob: Blob): Promise<string> {
+  async transcribeAudio(audioBlob: Blob, model: string): Promise<string> {
     const formData = new FormData();
     formData.append('file', audioBlob, 'audio.webm');
-    formData.append('model', 'whisper-large-v3');
+    formData.append('model', model);
 
     const response = await fetch(`${BASE_URL}/audio/transcriptions`, {
       method: 'POST',
@@ -62,6 +62,46 @@ export class LiteLLMClient {
 
     const result = await response.json();
     return result.text;
+  }
+
+  async generateImage(prompt: string, model: string): Promise<string> {
+    const response = await fetch(`${BASE_URL}/images/generations`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ model, prompt, n: 1 }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Image generation failed: ${response.statusText}`);
+    }
+
+    const result = await response.json();
+    const item = result.data?.[0] ?? {};
+    if (item.url) return item.url;
+    if (item.URL) return item.URL;
+    if (item.b64_json) return `data:image/png;base64,${item.b64_json}`;
+    return '';
+  }
+
+  async createEmbedding(input: string, model: string): Promise<number[]> {
+    const response = await fetch(`${BASE_URL}/embeddings`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ model, input }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Embedding failed: ${response.statusText}`);
+    }
+
+    const result = await response.json();
+    return result.data?.[0]?.embedding ?? [];
   }
 }
 

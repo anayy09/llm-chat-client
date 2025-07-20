@@ -14,17 +14,24 @@ import {
   Mic,
   MicOff,
   Stop,
+  Image as ImageIcon,
+  ScatterPlot,
   KeyboardArrowDown,
 } from '@mui/icons-material';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../store';
 import { MessageBubble } from './MessageBubble';
 import { useChat } from '../hooks/useChat';
 import { useSpeech } from '../hooks/useSpeech';
+import { useImageGeneration } from '../hooks/useImageGeneration';
+import { useEmbedding } from '../hooks/useEmbedding';
+import { addMessage, setLoading } from '../store/chatSlice';
+import type { Message } from '../types';
 
 export const ChatWindow: React.FC = () => {
   const { activeChat, chats, isLoading } = useSelector((state: RootState) => state.chat);
   const { apiKey } = useSelector((state: RootState) => state.settings);
+  const dispatch = useDispatch();
   
   const [input, setInput] = useState('');
   const [showScrollButton, setShowScrollButton] = useState(false);
@@ -35,6 +42,8 @@ export const ChatWindow: React.FC = () => {
   
   const { sendMessage, stopGeneration } = useChat();
   const { isRecording, isTranscribing, startRecording, stopRecording } = useSpeech();
+  const generateImage = useImageGeneration();
+  const createEmbedding = useEmbedding();
 
   const currentChat = chats.find(c => c.id === activeChat);
 
@@ -84,6 +93,66 @@ export const ChatWindow: React.FC = () => {
       }
     } else {
       await startRecording();
+    }
+  };
+
+  const handleImageGeneration = async () => {
+    if (!input.trim() || !activeChat) return;
+    const prompt = input.trim();
+    setInput('');
+
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: prompt,
+      timestamp: Date.now(),
+    };
+    dispatch(addMessage({ chatId: activeChat, message: userMessage }));
+
+    try {
+      dispatch(setLoading(true));
+      const url = await generateImage(prompt);
+      const assistant: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: `![${prompt}](${url})`,
+        timestamp: Date.now(),
+      };
+      dispatch(addMessage({ chatId: activeChat, message: assistant }));
+    } catch (error) {
+      console.error('Image generation failed:', error);
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
+  const handleEmbedding = async () => {
+    if (!input.trim() || !activeChat) return;
+    const text = input.trim();
+    setInput('');
+
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: text,
+      timestamp: Date.now(),
+    };
+    dispatch(addMessage({ chatId: activeChat, message: userMessage }));
+
+    try {
+      dispatch(setLoading(true));
+      const vector = await createEmbedding(text);
+      const assistant: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: `Embedding: ${JSON.stringify(vector)}`,
+        timestamp: Date.now(),
+      };
+      dispatch(addMessage({ chatId: activeChat, message: assistant }));
+    } catch (error) {
+      console.error('Embedding failed:', error);
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
@@ -266,6 +335,18 @@ export const ChatWindow: React.FC = () => {
               color={isRecording ? 'error' : 'default'}
             >
               {isRecording ? <MicOff /> : <Mic />}
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Generate image">
+            <IconButton onClick={handleImageGeneration} disabled={!input.trim() || !apiKey}>
+              <ImageIcon />
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title="Create embedding">
+            <IconButton onClick={handleEmbedding} disabled={!input.trim() || !apiKey}>
+              <ScatterPlot />
             </IconButton>
           </Tooltip>
 

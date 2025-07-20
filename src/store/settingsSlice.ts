@@ -9,6 +9,9 @@ interface SettingsState extends ChatSettings {
 
 const initialState: SettingsState = {
   model: 'llama-3.1-70b-instruct',
+  imageModel: 'flux.1-schnell',
+  audioModel: 'whisper-large-v3',
+  embeddingModel: 'nomic-embed-text-v1.5',
   temperature: 0.7,
   maxTokens: 1000,
   enableCache: false,

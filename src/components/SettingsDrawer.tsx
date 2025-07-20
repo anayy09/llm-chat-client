@@ -18,7 +18,12 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../store';
 import { updateSettings, setApiKey } from '../store/settingsSlice';
-import { AVAILABLE_MODELS } from '../lib/models';
+import {
+  AVAILABLE_MODELS,
+  AUDIO_MODELS,
+  IMAGE_MODELS,
+  EMBEDDING_MODELS,
+} from '../lib/models';
 
 interface SettingsDrawerProps {
   open: boolean;
@@ -35,6 +40,18 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ open, onClose })
 
   const handleModelChange = (event: any) => {
     dispatch(updateSettings({ model: event.target.value }));
+  };
+
+  const handleImageModelChange = (event: any) => {
+    dispatch(updateSettings({ imageModel: event.target.value }));
+  };
+
+  const handleAudioModelChange = (event: any) => {
+    dispatch(updateSettings({ audioModel: event.target.value }));
+  };
+
+  const handleEmbeddingModelChange = (event: any) => {
+    dispatch(updateSettings({ embeddingModel: event.target.value }));
   };
 
   const handleTemperatureChange = (_: Event, value: number | number[]) => {
@@ -55,6 +72,9 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ open, onClose })
   const handleReset = () => {
     dispatch(updateSettings({
       model: 'llama-3.1-70b-instruct',
+      imageModel: 'flux.1-schnell',
+      audioModel: 'whisper-large-v3',
+      embeddingModel: 'nomic-embed-text-v1.5',
       temperature: 0.7,
       maxTokens: 1000,
       enableCache: false,
@@ -120,6 +140,51 @@ export const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ open, onClose })
               onChange={handleModelChange}
             >
               {AVAILABLE_MODELS.map((model) => (
+                <MenuItem key={model} value={model}>
+                  {model}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl fullWidth sx={{ mb: 2 }}>
+            <InputLabel>Image Model</InputLabel>
+            <Select
+              value={settings.imageModel}
+              label="Image Model"
+              onChange={handleImageModelChange}
+            >
+              {IMAGE_MODELS.map((model) => (
+                <MenuItem key={model} value={model}>
+                  {model}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl fullWidth sx={{ mb: 2 }}>
+            <InputLabel>Audio Model</InputLabel>
+            <Select
+              value={settings.audioModel}
+              label="Audio Model"
+              onChange={handleAudioModelChange}
+            >
+              {AUDIO_MODELS.map((model) => (
+                <MenuItem key={model} value={model}>
+                  {model}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl fullWidth sx={{ mb: 2 }}>
+            <InputLabel>Embedding Model</InputLabel>
+            <Select
+              value={settings.embeddingModel}
+              label="Embedding Model"
+              onChange={handleEmbeddingModelChange}
+            >
+              {EMBEDDING_MODELS.map((model) => (
                 <MenuItem key={model} value={model}>
                   {model}
                 </MenuItem>
