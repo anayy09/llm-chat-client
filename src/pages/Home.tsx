@@ -84,7 +84,7 @@ export const Home: React.FC = () => {
         {/* App Bar */}
         <AppBar
           position="fixed"
-          sx={{
+          sx={(theme) => ({
             ml: { sm: `${DRAWER_WIDTH}px` },
             mr: rightSidebarOpen ? '400px' : 0,
             width: {
@@ -92,11 +92,12 @@ export const Home: React.FC = () => {
                 ? `calc(100% - ${DRAWER_WIDTH}px - 400px)`
                 : `calc(100% - ${DRAWER_WIDTH}px)`,
             },
+            background: `linear-gradient(90deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
             transition: theme.transitions.create(['width', 'margin'], {
               easing: theme.transitions.easing.sharp,
               duration: theme.transitions.duration.leavingScreen,
             }),
-          }}
+          })}
         >
           <Toolbar>
             <IconButton
@@ -168,12 +169,19 @@ export const Home: React.FC = () => {
         color="primary"
         aria-label="new chat"
         onClick={() => dispatch(createChat({ model }))}
-        sx={{
+        sx={(theme) => ({
           position: 'fixed',
           bottom: 24,
           right: rightSidebarOpen ? 440 : 24,
           zIndex: 1300,
-        }}
+          background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
+          color: theme.palette.primary.contrastText,
+          boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+          transition: 'transform 0.2s',
+          '&:hover': {
+            transform: 'scale(1.05)',
+          },
+        })}
       >
         <Add />
       </Fab>

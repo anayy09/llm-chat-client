@@ -75,12 +75,16 @@ export const MessageBubble = memo<MessageBubbleProps>(({ message }) => {
           sx={(theme) => ({
             p: 2,
             background: isUser
-              ? `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`
-              : theme.palette.background.paper,
+              ? `linear-gradient(135deg, ${theme.palette.primary.light} 0%, ${theme.palette.primary.dark} 100%)`
+              : `linear-gradient(135deg, ${theme.palette.secondary.light} 0%, ${theme.palette.secondary.dark} 100%)`,
             color: isUser ? theme.palette.primary.contrastText : theme.palette.text.primary,
             borderRadius: 3,
             position: 'relative',
             boxShadow: 3,
+            transition: 'transform 0.2s',
+            '&:hover': {
+              transform: 'translateY(-2px)',
+            },
             '&:hover .copy-button': {
               opacity: 1,
             },

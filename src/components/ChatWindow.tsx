@@ -298,14 +298,16 @@ export const ChatWindow: React.FC = () => {
 
       {/* Input */}
       <Paper
-        elevation={3}
-        sx={{
+        elevation={4}
+        sx={(theme) => ({
           p: 2,
           m: 2,
           mt: 0,
           borderRadius: 3,
           backdropFilter: 'blur(6px)',
-        }}
+          background: `linear-gradient(135deg, ${theme.palette.background.paper}80 0%, ${theme.palette.background.paper}CC 100%)`,
+          boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
+        })}
       >
         <Box
           component="form"
@@ -328,6 +330,16 @@ export const ChatWindow: React.FC = () => {
             disabled={isLoading}
             variant="filled"
             size="medium"
+            InputProps={{ disableUnderline: true }}
+            sx={(theme) => ({
+              '& .MuiFilledInput-root': {
+                background:
+                  theme.palette.mode === 'light'
+                    ? 'linear-gradient(90deg, #fff 0%, #f3f4f6 100%)'
+                    : 'linear-gradient(90deg, #1e1e1e 0%, #2a2a2a 100%)',
+                borderRadius: 2,
+              },
+            })}
           />
           
           <Tooltip title={isRecording ? 'Stop recording' : 'Voice input'}>
