@@ -303,6 +303,8 @@ export const ChatWindow: React.FC = () => {
           p: 2,
           m: 2,
           mt: 0,
+          borderRadius: 3,
+          backdropFilter: 'blur(6px)',
         }}
       >
         <Box
@@ -322,10 +324,10 @@ export const ChatWindow: React.FC = () => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Type your message... (Ctrl+Enter to send, ↑ to edit last)"
+            placeholder="Send a message…"
             disabled={isLoading}
-            variant="outlined"
-            size="small"
+            variant="filled"
+            size="medium"
           />
           
           <Tooltip title={isRecording ? 'Stop recording' : 'Voice input'}>

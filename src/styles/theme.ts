@@ -1,23 +1,20 @@
 import { createTheme } from '@mui/material/styles';
 
-export const lightTheme = createTheme({
-  palette: {
-    mode: 'light',
-    primary: {
-      main: '#1976d2',
-    },
-    secondary: {
-      main: '#dc004e',
-    },
-    background: {
-      default: '#f5f5f5',
-      paper: '#ffffff',
-    },
-  },
+const common = {
   typography: {
     fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
   },
+  shape: {
+    borderRadius: 12,
+  },
   components: {
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backdropFilter: 'blur(8px)',
+        },
+      },
+    },
     MuiCssBaseline: {
       styleOverrides: {
         body: {
@@ -36,42 +33,30 @@ export const lightTheme = createTheme({
       },
     },
   },
+} as const;
+
+export const lightTheme = createTheme({
+  palette: {
+    mode: 'light',
+    primary: { main: '#6366f1' },
+    secondary: { main: '#d97706' },
+    background: {
+      default: '#f8fafc',
+      paper: '#ffffff',
+    },
+  },
+  ...common,
 });
 
 export const darkTheme = createTheme({
   palette: {
     mode: 'dark',
-    primary: {
-      main: '#90caf9',
-    },
-    secondary: {
-      main: '#f48fb1',
-    },
+    primary: { main: '#8b5cf6' },
+    secondary: { main: '#fbbf24' },
     background: {
       default: '#121212',
       paper: '#1e1e1e',
     },
   },
-  typography: {
-    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
-  },
-  components: {
-    MuiCssBaseline: {
-      styleOverrides: {
-        body: {
-          scrollbarWidth: 'thin',
-          '&::-webkit-scrollbar': {
-            width: '8px',
-          },
-          '&::-webkit-scrollbar-track': {
-            background: '#2b2b2b',
-          },
-          '&::-webkit-scrollbar-thumb': {
-            background: '#6b6b6b',
-            borderRadius: '4px',
-          },
-        },
-      },
-    },
-  },
+  ...common,
 });

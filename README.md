@@ -1,6 +1,6 @@
 # LLM Chat Client
 
-A modern, feature-rich chat client for LLM models with streaming responses, voice input, analytics, and more.
+A modern, feature-rich chat client for LLM models with streaming responses, voice input, analytics, and more. The UI now features a refreshed design with softer colors and a floating action button for quickly creating new conversations.
 
 ## Features
 

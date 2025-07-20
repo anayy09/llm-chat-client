@@ -71,17 +71,20 @@ export const MessageBubble = memo<MessageBubbleProps>(({ message }) => {
         </Box>
 
         <Paper
-          elevation={1}
-          sx={{
+          elevation={3}
+          sx={(theme) => ({
             p: 2,
-            bgcolor: isUser ? 'primary.main' : 'background.paper',
-            color: isUser ? 'primary.contrastText' : 'text.primary',
-            borderRadius: 2,
+            background: isUser
+              ? `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`
+              : theme.palette.background.paper,
+            color: isUser ? theme.palette.primary.contrastText : theme.palette.text.primary,
+            borderRadius: 3,
             position: 'relative',
+            boxShadow: 3,
             '&:hover .copy-button': {
               opacity: 1,
             },
-          }}
+          })}
         >
           {isAssistant ? (
             <ReactMarkdown

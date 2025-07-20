@@ -5,16 +5,19 @@ import {
   Toolbar,
   Typography,
   IconButton,
+  Fab,
   useTheme,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
+  Add,
   Settings,
   Analytics,
 } from '@mui/icons-material';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../store';
 import { toggleRightSidebar } from '../store/settingsSlice';
+import { createChat } from '../store/chatSlice';
 import { ChatWindow } from '../components/ChatWindow';
 import { Sidebar } from '../components/Sidebar';
 import { SettingsDrawer } from '../components/SettingsDrawer';
@@ -26,7 +29,7 @@ export const Home: React.FC = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
   
-  const { rightSidebarOpen } = useSelector((state: RootState) => state.settings);
+  const { rightSidebarOpen, model } = useSelector((state: RootState) => state.settings);
   const { activeChat, chats } = useSelector((state: RootState) => state.chat);
   
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(false);
@@ -105,6 +108,15 @@ export const Home: React.FC = () => {
             >
               <MenuIcon />
             </IconButton>
+
+            <IconButton
+              color="inherit"
+              aria-label="new chat"
+              onClick={() => dispatch(createChat({ model }))}
+              sx={{ mr: 1 }}
+            >
+              <Add />
+            </IconButton>
             
             <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
               {currentChat ? currentChat.title : 'LLM Chat Client'}
@@ -150,6 +162,21 @@ export const Home: React.FC = () => {
         open={rightSidebarOpen}
         onClose={() => dispatch(toggleRightSidebar())}
       />
+
+      {/* Floating new chat button */}
+      <Fab
+        color="primary"
+        aria-label="new chat"
+        onClick={() => dispatch(createChat({ model }))}
+        sx={{
+          position: 'fixed',
+          bottom: 24,
+          right: rightSidebarOpen ? 440 : 24,
+          zIndex: 1300,
+        }}
+      >
+        <Add />
+      </Fab>
     </Box>
   );
 };
