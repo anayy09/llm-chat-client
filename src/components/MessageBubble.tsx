@@ -85,7 +85,7 @@ export const MessageBubble = memo<MessageBubbleProps>(({ message }) => {
         >
           {isAssistant ? (
             <ReactMarkdown
-              transformImageUri={uri => uri}
+              urlTransform={uri => uri}
               components={{
                 code({ node, inline, className, children, ...props }: any) {
                   const match = /language-(\w+)/.exec(className || '');
